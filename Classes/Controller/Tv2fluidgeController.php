@@ -27,7 +27,7 @@
 /**
  * TV Tv2fluidge Backend Controller
  */
-class Tx_SfTv2fluidge_Controller_Tv2fluidgeController extends Tx_Extbase_MVC_Controller_ActionController {
+class Tx_SfTv2fluidge_Controller_Tv2fluidgeController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
 
 	/**
 	 * UnreferencedElementHelper

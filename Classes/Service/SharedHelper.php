@@ -23,12 +23,12 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('templavoila').'class.tx_templavoila_api.php');
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('templavoila').'class.tx_templavoila_api.php');
 
 /**
  * Class with methods used in other helpers/controllers
  */
-class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
+class Tx_SfTv2fluidge_Service_SharedHelper implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
 	 * @var int
@@ -49,7 +49,7 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->templavoilaAPIObj = t3lib_div::makeInstance ('tx_templavoila_api');
+		$this->templavoilaAPIObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance ('tx_templavoila_api');
 		if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sf_tv2fluidge'])) {
 			$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sf_tv2fluidge']);
 		}
@@ -122,9 +122,9 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 		}
 
 		/**
-		 * @var t3lib_queryGenerator $tree
+		 * @var \TYPO3\CMS\Core\Database\QueryGenerator $tree
 		 */
-		$tree = t3lib_div::makeInstance('t3lib_queryGenerator');
+		$tree = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Database\\QueryGenerator');
 
 		$startPages = array();
 
@@ -177,8 +177,8 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 	public function canBeInterpretedAsInteger($value) {
 		$canBeInterpretedAsInteger = NULL;
 
-		if (class_exists('t3lib_utility_Math')) {
-			$canBeInterpretedAsInteger = t3lib_utility_Math::canBeInterpretedAsInteger($value);
+		if (class_exists('\\TYPO3\\CMS\\Core\\Utility\\MathUtility')) {
+			$canBeInterpretedAsInteger = \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($value);
 		} else {
 			$canBeInterpretedAsInteger= t3lib_div::testInt($value);
 		}
@@ -197,9 +197,9 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 		if ($pageRecord['tx_templavoila_to'] != '' && $pageRecord['tx_templavoila_to'] != 0) {
 			$tvTemplateObjectUid = $pageRecord['tx_templavoila_to'];
 		} else {
-			$rootLine = t3lib_beFunc::BEgetRootLine($pageRecord['uid'],'', TRUE);
+			$rootLine = \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($pageRecord['uid'],'', TRUE);
 			foreach($rootLine as $rootLineRecord) {
-				$myPageRecord = t3lib_beFunc::getRecordWSOL('pages', $rootLineRecord['uid']);
+				$myPageRecord = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecordWSOL('pages', $rootLineRecord['uid']);
 				if ($myPageRecord['tx_templavoila_next_to']) {
 					$tvTemplateObjectUid = $myPageRecord['tx_templavoila_next_to'];
 					break;
@@ -268,7 +268,7 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 		$flexform = NULL;
 		if ($this->getTemplavoilaStaticDsIsEnabled()) {
 			$toRecord = $this->getTvTemplateObject($uidTvDs);
-			$path = t3lib_div::getFileAbsFileName($toRecord['datastructure']);
+			$path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($toRecord['datastructure']);
 			$flexform = simplexml_load_file($path);
 		}
 		else {
@@ -372,7 +372,7 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 	 * @return boolean
 	 */
 	public function isContentElementAvailable($contentUid) {
-		$where = 'uid=' . (int)$contentUid . t3lib_BEfunc::deleteClause('tt_content');
+		$where = 'uid=' . (int)$contentUid . \TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('tt_content');
 
 		$count = $GLOBALS['TYPO3_DB']->exec_SELECTcountRows('1', 'tt_content', $where);
 		return $count ? TRUE : FALSE;
@@ -442,7 +442,7 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 		$table = 'pages_language_overlay';
 		$where = '(pid = ' . (int)$uid . ')' .
 						' AND (sys_language_uid > 0)' .
-						t3lib_BEfunc::deleteClause('pages_language_overlay');
+			\TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('pages_language_overlay');
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($fields, $table, $where, '', '', '');
 		return $res;
@@ -471,11 +471,11 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 	public function getLanguagesIsoCodes() {
 		$languagesIsoCodes = array();
 
-		if (t3lib_extMgm::isLoaded('static_info_tables')) {
+		if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('static_info_tables')) {
 			$fields = 'sys_language.uid AS langUid, static_languages.lg_iso_2 AS isoCode';
 			$tables = 'sys_language, static_languages';
 			$where = '(sys_language.static_lang_isocode = static_languages.uid)'
-						. t3lib_BEfunc::deleteClause('sys_language');
+						. \TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('sys_language');
 
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($fields, $tables, $where, '', '', '');
 			if ($res !== NULL) {
@@ -505,7 +505,7 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 		if ($tvTemplateUid > 0) {
 			$contentCols = $this->getTvContentCols($tvTemplateUid, false);
 			if (($result['tx_templavoila_flex'] != '') && is_array($contentCols) && !empty($contentCols)) {
-				$flexFormArray = t3lib_div::xml2array($result['tx_templavoila_flex']);
+				$flexFormArray = \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($result['tx_templavoila_flex']);
 				if (isset($flexFormArray['data']) && is_array($flexFormArray['data'])) {
 					foreach ($flexFormArray['data'] as $flexFormSheet) {
 						if (is_array($flexFormSheet)) {
@@ -561,7 +561,7 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 				$fieldValues = explode(',', $contentArray[$fieldName]);
 			}
 
-			$languageValues = t3lib_div::trimExplode(',', $languageValues, TRUE);
+			$languageValues = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $languageValues, TRUE);
 			$languageValues = array_values($languageValues);
 			$languageValuesCount = count($languageValues);
 			for ($languageValueIndex = 0; $languageValueIndex < $languageValuesCount; $languageValueIndex++) {
@@ -617,7 +617,7 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 				$contentCols = array();
 			}
 
-			$flexformArray = t3lib_div::xml2array($flexformString);
+			$flexformArray = \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($flexformString);
 			if (isset($flexformArray['data']) && is_array($flexformArray['data'])) {
 				foreach ($flexformArray['data'] as &$sheetData) {
 					if (is_array($sheetData)) {
@@ -666,9 +666,9 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 
 		if (!empty($flexformArray) && is_array($flexformArray)) {
 			/**
-			 * @var t3lib_flexformtools $flexformTools
+			 * @var \TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools $flexformTools
 			 */
-			$flexformTools = t3lib_div::makeInstance('t3lib_flexformtools');
+			$flexformTools = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Configuration\\FlexForm\\FlexFormTools');
 			$flexformString = $flexformTools->flexArray2Xml($flexformArray, TRUE);
 		}
 
@@ -686,7 +686,7 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 		$flexformArray = NULL;
 		if (!empty($flexformString)) {
 			if (!empty($langIsoCode)) {
-				$flexformArray = t3lib_div::xml2array($flexformString);
+				$flexformArray = \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($flexformString);
 				if (is_array($flexformArray)) {
 					if (is_array($flexformArray['data'])) {
 						foreach ($flexformArray['data'] as &$sheetData) {
@@ -754,9 +754,9 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 
 		if (!empty($flexformArray) && is_array($flexformArray)) {
 			/**
-			 * @var t3lib_flexformtools $flexformTools
+			 * @var \TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools $flexformTools
 			 */
-			$flexformTools = t3lib_div::makeInstance('t3lib_flexformtools');
+			$flexformTools = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Configuration\\FlexForm\\FlexFormTools');
 			$flexformString = $flexformTools->flexArray2Xml($flexformArray, TRUE);
 		}
 
@@ -785,7 +785,7 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 	 * @return array
 	 */
 	private function getContentColsFromTs($typoScript) {
-		$parser = t3lib_div::makeInstance('t3lib_TSparser');
+		$parser = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\TypoScript\\Parser\\TypoScriptParser');
 		$parser->parse($typoScript);
 		$data = $parser->setup['backend_layout.'];
 
@@ -878,7 +878,7 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 		$fields = '*';
 		$table = 'tt_content';
 		$where = '(l18n_parent=' . (int)$uidContent . ')' .
-					t3lib_BEfunc::deleteClause('tt_content');
+			\TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('tt_content');
 
 		return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($fields, $table, $where, '', 'sys_language_uid ASC', '');
 	}
@@ -892,7 +892,7 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 		$fields = '*';
 		$table = 'tt_content';
 		$where = '(l18n_parent=' . (int)$uidContent . ') AND (sys_language_uid = ' . (int)$langUid . ')' .
-					t3lib_BEfunc::deleteClause('tt_content');
+			\TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('tt_content');
 
 		return $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow($fields, $table, $where, '', '', '');
 	}
@@ -994,7 +994,7 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 		$table = 'pages_language_overlay';
 		$where = '(pid=' . (int)$pageUid . ') '.
 					' AND (sys_language_uid > 0)' .
-					t3lib_BEfunc::deleteClause('pages_language_overlay');
+			\TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('pages_language_overlay');
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($fields, $table, $where, '', '', '');
 
@@ -1020,7 +1020,7 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements t3lib_Singleton {
 	public function getAllLanguages() {
 		$fields = 'uid';
 		$table = 'sys_language';
-		$where = '(1=1)' . t3lib_BEfunc::deleteClause('sys_language');
+		$where = '(1=1)' . \TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('sys_language');
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($fields, $table, $where, '', '', '');
 

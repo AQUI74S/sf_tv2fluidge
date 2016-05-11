@@ -26,7 +26,7 @@
 /**
  * Class with methods used for mulitlingual content conversion
  */
-class Tx_SfTv2fluidge_Service_ConvertMultilangContentHelper implements t3lib_Singleton {
+class Tx_SfTv2fluidge_Service_ConvertMultilangContentHelper implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
 	 * @var Tx_SfTv2fluidge_Service_SharedHelper
@@ -34,7 +34,7 @@ class Tx_SfTv2fluidge_Service_ConvertMultilangContentHelper implements t3lib_Sin
 	protected $sharedHelper;
 
 	/**
-	 * @var t3lib_refindex
+	 * @var \TYPO3\CMS\Core\Database\ReferenceIndex
 	 */
 	protected $refIndex;
 
@@ -69,12 +69,12 @@ class Tx_SfTv2fluidge_Service_ConvertMultilangContentHelper implements t3lib_Sin
 	}
 
 	/**
-	 * DI for t3lib_refindex
+	 * DI for \TYPO3\CMS\Core\Database\ReferenceIndex
 	 *
-	 * @param t3lib_refindex t3lib_refindex
+	 * @param \TYPO3\CMS\Core\Database\ReferenceIndex ReferenceIndex
 	 * @return void
 	 */
-	public function injectRefIndex(t3lib_refindex $refIndex) {
+	public function injectRefIndex(\TYPO3\CMS\Core\Database\ReferenceIndex $refIndex) {
 		$this->refIndex = $refIndex;
 	}
 
@@ -144,7 +144,7 @@ class Tx_SfTv2fluidge_Service_ConvertMultilangContentHelper implements t3lib_Sin
 		if ($this->insertRecordsConversionOption !== 'keep') {
 			foreach ($shortcutElements as $shortcutElement) {
 				if (!empty($shortcutElement['records']) && ($shortcutElement['CType'] === 'shortcut')) {
-					$records = t3lib_div::trimExplode(',', $shortcutElement['records'], TRUE);
+					$records = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $shortcutElement['records'], TRUE);
 					$recordShortcutString = 'tt_content_' . (int)$contentElementUid;
 					$isShortcutRecord = FALSE;
 					foreach ($records as &$record) {
@@ -213,7 +213,7 @@ class Tx_SfTv2fluidge_Service_ConvertMultilangContentHelper implements t3lib_Sin
 			$contentElement['pi_flexform'] = $contentElement['tx_templavoila_flex'];
 		}
 		if (($this->flexformConversionOption !== 'exclude')) {
-			if (t3lib_extMgm::isLoaded('static_info_tables')) {
+			if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('static_info_tables')) {
 				$langUid = (int)$contentElement['sys_language_uid'];
 				if ($langUid > 0) {
 					$forceLanguage = ($this->flexformConversionOption === 'forceLanguage');

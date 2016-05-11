@@ -26,7 +26,7 @@
 /**
  * Helper class for handling TV content column migration to Fluid backend layouts
  */
-class Tx_SfTv2fluidge_Service_MigrateContentHelper implements t3lib_Singleton {
+class Tx_SfTv2fluidge_Service_MigrateContentHelper implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
 	 * @var Tx_SfTv2fluidge_Service_SharedHelper
@@ -159,7 +159,7 @@ class Tx_SfTv2fluidge_Service_MigrateContentHelper implements t3lib_Singleton {
 				$flexformString = $pageFlexformString;
 				$langUid = (int)$langUid;
 				if (($flexformConversionOption !== 'exclude')) {
-					if (t3lib_extMgm::isLoaded('static_info_tables')) {
+					if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('static_info_tables')) {
 						if ($langUid > 0) {
 							$forceLanguage = ($flexformConversionOption === 'forceLanguage');
 							if (!$isTvDataLangDisabled) {
@@ -172,7 +172,7 @@ class Tx_SfTv2fluidge_Service_MigrateContentHelper implements t3lib_Singleton {
 				$flexformString = $this->sharedHelper->cleanFlexform($flexformString, $tvTemplateUid);
 
 				if (!empty($flexformString)) {
-					$flexformArray = t3lib_div::xml2array($flexformString);
+					$flexformArray = \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($flexformString);
 					if (is_array($flexformArray['data'])) {
 						foreach ($flexformArray['data'] as $sheetData) {
 							if (is_array($sheetData['lDEF'])) {
@@ -201,7 +201,7 @@ class Tx_SfTv2fluidge_Service_MigrateContentHelper implements t3lib_Singleton {
 														'pages_language_overlay',
 														'(pid=' . intval($pageUid) . ')'
 														. ' AND (sys_language_uid = ' . $langUid . ')' .
-														t3lib_BEfunc::deleteClause('pages_language_overlay'),
+														\TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('pages_language_overlay'),
 
 														array(
 															$fullFieldName => $fieldValue

@@ -26,7 +26,7 @@
 /**
  * Helper class for handling unreferenced elements
  */
-class Tx_SfTv2fluidge_Service_UnreferencedElementHelper implements t3lib_Singleton {
+class Tx_SfTv2fluidge_Service_UnreferencedElementHelper implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
 	 * @var Tx_SfTv2fluidge_Service_SharedHelper
@@ -93,8 +93,8 @@ class Tx_SfTv2fluidge_Service_UnreferencedElementHelper implements t3lib_Singlet
 			'tt_content',
 			'uid NOT IN ('.implode(',',$allReferencedElementsArr).')'.
 			' AND t3ver_wsid='.intval($BE_USER->workspace).
-			t3lib_BEfunc::deleteClause('tt_content').
-			t3lib_BEfunc::versioningPlaceholderClause('tt_content'),
+			\TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('tt_content').
+			\TYPO3\CMS\Backend\Utility\BackendUtility::versioningPlaceholderClause('tt_content'),
 			'',
 			'sorting'
 		);

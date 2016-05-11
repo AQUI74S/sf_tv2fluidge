@@ -26,7 +26,7 @@
 /**
  * Helper class for handling TV FCE to Grid Element content migration
  */
-class Tx_SfTv2fluidge_Service_MigrateFceHelper implements t3lib_Singleton {
+class Tx_SfTv2fluidge_Service_MigrateFceHelper implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
 	 * @var Tx_SfTv2fluidge_Service_SharedHelper
@@ -34,7 +34,7 @@ class Tx_SfTv2fluidge_Service_MigrateFceHelper implements t3lib_Singleton {
 	protected $sharedHelper;
 
 	/**
-	 * @var t3lib_refindex
+	 * @var \TYPO3\CMS\Core\Database\ReferenceIndex
 	 */
 	protected $refIndex;
 
@@ -49,12 +49,12 @@ class Tx_SfTv2fluidge_Service_MigrateFceHelper implements t3lib_Singleton {
 	}
 
 	/**
-	 * DI for t3lib_refindex
+	 * DI for \TYPO3\CMS\Core\Database\ReferenceIndex
 	 *
-	 * @param t3lib_refindex t3lib_refindex
+	 * @param \TYPO3\CMS\Core\Database\ReferenceIndex ReferenceIndex
 	 * @return void
 	 */
-	public function injectRefIndex(t3lib_refindex $refIndex) {
+	public function injectRefIndex(\TYPO3\CMS\Core\Database\ReferenceIndex $refIndex) {
 		$this->refIndex = $refIndex;
 	}
 
@@ -162,7 +162,7 @@ class Tx_SfTv2fluidge_Service_MigrateFceHelper implements t3lib_Singleton {
 		$fields = '*';
 		$table = 'tt_content';
 		$where = 'CType = "templavoila_pi1" AND tx_templavoila_to=' . intval($uidFce) .
-					t3lib_BEfunc::deleteClause('tt_content');
+			\TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('tt_content');
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($fields, $table, $where, '', '', '');
 
