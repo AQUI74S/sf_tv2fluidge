@@ -23,13 +23,15 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+namespace Sf\Tv2fluidge\Service;
+
 /**
  * Class with methods used for mulitlingual content conversion
  */
-class Tx_SfTv2fluidge_Service_ConvertMultilangContentHelper implements \TYPO3\CMS\Core\SingletonInterface {
+class ConvertMultilangContentHelper implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
-	 * @var Tx_SfTv2fluidge_Service_SharedHelper
+	 * @var \Sf\Tv2fluidge\Service\SharedHelper
 	 */
 	protected $sharedHelper;
 
@@ -61,10 +63,10 @@ class Tx_SfTv2fluidge_Service_ConvertMultilangContentHelper implements \TYPO3\CM
 	/**
 	 * DI for shared helper
 	 *
-	 * @param Tx_SfTv2fluidge_Service_SharedHelper $sharedHelper
+	 * @param \Sf\Tv2fluidge\Service\SharedHelper $sharedHelper
 	 * @return void
 	 */
-	public function injectSharedHelper(Tx_SfTv2fluidge_Service_SharedHelper $sharedHelper) {
+	public function injectSharedHelper(\Sf\Tv2fluidge\Service\SharedHelper $sharedHelper) {
 		$this->sharedHelper = $sharedHelper;
 	}
 

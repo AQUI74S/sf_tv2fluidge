@@ -23,12 +23,13 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+namespace Sf\Tv2fluidge\Service;
 require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('templavoila').'class.tx_templavoila_api.php');
 
 /**
  * Class with methods used in other helpers/controllers
  */
-class Tx_SfTv2fluidge_Service_SharedHelper implements \TYPO3\CMS\Core\SingletonInterface {
+class SharedHelper implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
 	 * @var int
@@ -224,7 +225,7 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements \TYPO3\CMS\Core\SingletonI
 		if (!empty($flexform)) {
 			$elements = $flexform->xpath("ROOT/el/*");
 			if ($addSelectLabel) {
-				$contentCols[''] = Tx_Extbase_Utility_Localization::translate('label_select', 'sf_tv2fluidge');
+				$contentCols[''] = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('label_select', 'sf_tv2fluidge');
 			}
 			foreach ($elements as $element) {
 				if ($element->tx_templavoila->eType == 'ce') {
@@ -790,7 +791,7 @@ class Tx_SfTv2fluidge_Service_SharedHelper implements \TYPO3\CMS\Core\SingletonI
 		$data = $parser->setup['backend_layout.'];
 
 		$contentCols = array();
-		$contentCols[''] = Tx_Extbase_Utility_Localization::translate('label_select', 'sf_tv2fluidge');
+		$contentCols[''] = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('label_select', 'sf_tv2fluidge');
 		if ($data) {
 			foreach($data['rows.'] as $row) {
 				foreach($row['columns.'] as $column) {

@@ -24,121 +24,123 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+namespace Sf\Tv2fluidge\Controller;
+
 /**
  * TV Tv2fluidge Backend Controller
  */
-class Tx_SfTv2fluidge_Controller_Tv2fluidgeController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
+class Tv2fluidgeController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
 
 	/**
 	 * UnreferencedElementHelper
 	 *
-	 * @var Tx_SfTv2fluidge_Service_UnreferencedElementHelper
+	 * @var \Sf\Tv2fluidge\Service\UnreferencedElementHelper
 	 */
 	protected $unreferencedElementHelper;
 
 	/**
 	 * DI for UnreferencedElementHelper
 	 *
-	 * @param Tx_SfTv2fluidge_Service_UnreferencedElementHelper $unreferencedElementHelper
+	 * @param \Sf\Tv2fluidge\Service\UnreferencedElementHelper $unreferencedElementHelper
 	 * @return void
 	 */
-	public function injectUnreferencedElementHelper(Tx_SfTv2fluidge_Service_UnreferencedElementHelper $unreferencedElementHelper) {
+	public function injectUnreferencedElementHelper(\Sf\Tv2fluidge\Service\UnreferencedElementHelper $unreferencedElementHelper) {
 		$this->unreferencedElementHelper = $unreferencedElementHelper;
 	}
 
 	/**
 	 * ReferenceElementHelper
 	 *
-	 * @var Tx_SfTv2fluidge_Service_ReferenceElementHelper
+	 * @var \Sf\Tv2fluidge\Service\ReferenceElementHelper
 	 */
 	protected $referenceElementHelper;
 
 	/**
 	 * DI for ReferenceElementHelper
 	 *
-	 * @param Tx_SfTv2fluidge_Service_ReferenceElementHelper $referenceElementHelper
+	 * @param \Sf\Tv2fluidge\Service\ReferenceElementHelper $referenceElementHelper
 	 * @return void
 	 */
-	public function injectReferenceElementHelper(Tx_SfTv2fluidge_Service_ReferenceElementHelper $referenceElementHelper) {
+	public function injectReferenceElementHelper(\Sf\Tv2fluidge\Service\ReferenceElementHelper $referenceElementHelper) {
 		$this->referenceElementHelper = $referenceElementHelper;
 	}
 
 	/**
 	 * MigrateFceHelper
 	 *
-	 * @var Tx_SfTv2fluidge_Service_MigrateFceHelper
+	 * @var \Sf\Tv2fluidge\Service\MigrateFceHelper
 	 */
 	protected $migrateFceHelper;
 
 	/**
 	 * DI for MigrateFceHelper
 	 *
-	 * @param Tx_SfTv2fluidge_Service_MigrateFceHelper $migrateFceHelper
+	 * @param \Sf\Tv2fluidge\Service\MigrateFceHelper $migrateFceHelper
 	 * @return void
 	 */
-	public function injectUpdateFceHelper(Tx_SfTv2fluidge_Service_MigrateFceHelper $migrateFceHelper) {
+	public function injectUpdateFceHelper(\Sf\Tv2fluidge\Service\MigrateFceHelper $migrateFceHelper) {
 		$this->migrateFceHelper = $migrateFceHelper;
 	}
 
 	/**
 	 * MigrateContentHelper
 	 *
-	 * @var Tx_SfTv2fluidge_Service_MigrateContentHelper
+	 * @var \Sf\Tv2fluidge\Service\MigrateContentHelper
 	 */
 	protected $migrateContentHelper;
 
 	/**
 	 * DI for MigrateContentHelper
 	 *
-	 * @param Tx_SfTv2fluidge_Service_MigrateContentHelper $migrateContentHelper
+	 * @param \Sf\Tv2fluidge\Service\MigrateContentHelper $migrateContentHelper
 	 * @return void
 	 */
-	public function injectContentFceHelper(Tx_SfTv2fluidge_Service_MigrateContentHelper $migrateContentHelper) {
+	public function injectContentFceHelper(\Sf\Tv2fluidge\Service\MigrateContentHelper $migrateContentHelper) {
 		$this->migrateContentHelper = $migrateContentHelper;
 	}
 
 	/**
-	 * @var Tx_SfTv2fluidge_Service_FixSortingHelper
+	 * @var \Sf\Tv2fluidge\Service\FixSortingHelper
 	 */
 	protected $fixSortingHelper;
 
 	/**
 	 * DI for fix sorting helper
 	 *
-	 * @param Tx_SfTv2fluidge_Service_FixSortingHelper $fixSortingHelper
+	 * @param \Sf\Tv2fluidge\Service\FixSortingHelper $fixSortingHelper
 	 * @return void
 	 */
-	public function injectFixSortingHelper(Tx_SfTv2fluidge_Service_FixSortingHelper $fixSortingHelper) {
+	public function injectFixSortingHelper(\Sf\Tv2fluidge\Service\FixSortingHelper $fixSortingHelper) {
 		$this->fixSortingHelper = $fixSortingHelper;
 	}
 
 	/**
-	 * @var Tx_SfTv2fluidge_Service_SharedHelper
+	 * @var \Sf\Tv2fluidge\Service\SharedHelper
 	 */
 	protected $sharedHelper;
 
 	/**
 	 * DI for shared helper
 	 *
-	 * @param Tx_SfTv2fluidge_Service_SharedHelper $sharedHelper
+	 * @param \Sf\Tv2fluidge\Service\SharedHelper $sharedHelper
 	 * @return void
 	 */
-	public function injectSharedHelper(Tx_SfTv2fluidge_Service_SharedHelper $sharedHelper) {
+	public function injectSharedHelper(\Sf\Tv2fluidge\Service\SharedHelper $sharedHelper) {
 		$this->sharedHelper = $sharedHelper;
 	}
 
 	/**
-	 * @var Tx_SfTv2fluidge_Service_ConvertMultilangContentHelper
+	 * @var \Sf\Tv2fluidge\Service\ConvertMultilangContentHelper
 	 */
 	protected $convertMultilangContentHelper;
 
 	/**
 	 * DI for shared helper
 	 *
-	 * @param Tx_SfTv2fluidge_Service_ConvertMultilangContentHelper $convertMultilangContentHelper
+	 * @param \Sf\Tv2fluidge\Service\ConvertMultilangContentHelper $convertMultilangContentHelper
 	 * @return void
 	 */
-	public function injectConvertMultilangContentHelper(Tx_SfTv2fluidge_Service_ConvertMultilangContentHelper $convertMultilangContentHelper) {
+	public function injectConvertMultilangContentHelper(\Sf\Tv2fluidge\Service\ConvertMultilangContentHelper $convertMultilangContentHelper) {
 		$this->convertMultilangContentHelper = $convertMultilangContentHelper;
 	}
 
