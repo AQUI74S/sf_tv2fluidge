@@ -23,7 +23,7 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-namespace Sf\Tv2fluidge\Service;
+namespace Sf\SfTv2fluidge\Service;
 
 /**
  * Class with methods for fixing the sorting of translated elements
@@ -33,7 +33,7 @@ class FixSortingHelper implements \TYPO3\CMS\Core\SingletonInterface {
 	const SORTING_OFFSET = 25;
 
 	/**
-	 * @var \Sf\Tv2fluidge\Service\SharedHelper
+	 * @var \Sf\SfTv2fluidge\Service\SharedHelper
 	 */
 	protected $sharedHelper;
 
@@ -45,10 +45,10 @@ class FixSortingHelper implements \TYPO3\CMS\Core\SingletonInterface {
 	/**
 	 * DI for shared helper
 	 *
-	 * @param \Sf\Tv2fluidge\Service\SharedHelper $sharedHelper
+	 * @param \Sf\SfTv2fluidge\Service\SharedHelper $sharedHelper
 	 * @return void
 	 */
-	public function injectSharedHelper(\Sf\Tv2fluidge\Service\SharedHelper $sharedHelper) {
+	public function injectSharedHelper(\Sf\SfTv2fluidge\Service\SharedHelper $sharedHelper) {
 		$this->sharedHelper = $sharedHelper;
 	}
 

@@ -23,7 +23,7 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-namespace Sf\Tv2fluidge\Service;
+namespace Sf\SfTv2fluidge\Service;
 require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('templavoila').'class.tx_templavoila_api.php');
 
 /**

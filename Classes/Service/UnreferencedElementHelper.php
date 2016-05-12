@@ -23,7 +23,7 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-namespace Sf\Tv2fluidge\Service;
+namespace Sf\SfTv2fluidge\Service;
 
 /**
  * Helper class for handling unreferenced elements
@@ -31,17 +31,17 @@ namespace Sf\Tv2fluidge\Service;
 class UnreferencedElementHelper implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
-	 * @var \Sf\Tv2fluidge\Service\SharedHelper
+	 * @var \Sf\SfTv2fluidge\Service\SharedHelper
 	 */
 	protected $sharedHelper;
 
 	/**
 	 * DI for shared helper
 	 *
-	 * @param \Sf\Tv2fluidge\Service\SharedHelper $sharedHelper
+	 * @param \Sf\SfTv2fluidge\Service\SharedHelper $sharedHelper
 	 * @return void
 	 */
-	public function injectSharedHelper(\Sf\Tv2fluidge\Service\SharedHelper $sharedHelper) {
+	public function injectSharedHelper(\Sf\SfTv2fluidge\Service\SharedHelper $sharedHelper) {
 		$this->sharedHelper = $sharedHelper;
 	}
 
