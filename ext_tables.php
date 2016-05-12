@@ -11,7 +11,7 @@ if (TYPO3_MODE === 'BE') {
 	 * Registers a Backend Module
 	 */
 	\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-		$_EXTKEY,
+		'Sf.' . $_EXTKEY,
 		'web', // Make module a submodule of 'web'
 		'sf_tv2fluidge', // Submodule key
 		'', // Position
