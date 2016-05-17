@@ -25,6 +25,7 @@
  ***************************************************************/
 
 namespace Sf\SfTv2fluidge\Controller;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * TV SfTv2fluidge Backend Controller
@@ -208,6 +209,7 @@ class SfTv2fluidgeController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCon
 	 * @return void
 	 */
 	public function indexMigrateFceAction($formdata = NULL) {
+
 		if ($this->sharedHelper->getTemplavoilaStaticDsIsEnabled()) {
 			$allFce = $this->migrateFceHelper->getAllFileFce();
 		}

@@ -24,7 +24,7 @@
  ***************************************************************/
 
 namespace Sf\SfTv2fluidge\Service;
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('templavoila').'class.tx_templavoila_api.php');
+use \Extension\Templavoila\Service\ApiService;
 
 /**
  * Class with methods used in other helpers/controllers
@@ -37,7 +37,7 @@ class SharedHelper implements \TYPO3\CMS\Core\SingletonInterface {
 	const DEFAULT_PAGES_DEPTH_LIMIT = 99;
 
 	/**
-	 * @var tx_templavoila_api
+	 * @var ApiService
 	 */
 	protected $templavoilaAPIObj;
 
@@ -50,7 +50,7 @@ class SharedHelper implements \TYPO3\CMS\Core\SingletonInterface {
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->templavoilaAPIObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance ('tx_templavoila_api');
+//		$this->templavoilaAPIObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance ('Extension\\Templavoila\\Service\\ApiService');
 		if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sf_tv2fluidge'])) {
 			$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sf_tv2fluidge']);
 		}
@@ -59,7 +59,7 @@ class SharedHelper implements \TYPO3\CMS\Core\SingletonInterface {
 	/**
 	 * Returns the TemplaVoila Api Object
 	 *
-	 * @return object|tx_templavoila_api
+	 * @return object| ApiService
 	 */
 	public function getTemplavoilaAPIObj() {
 		return $this->templavoilaAPIObj;
