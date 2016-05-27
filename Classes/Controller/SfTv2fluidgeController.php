@@ -25,6 +25,7 @@
  ***************************************************************/
 
 namespace Sf\SfTv2fluidge\Controller;
+
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -216,6 +217,7 @@ class SfTv2fluidgeController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCon
 		else {
 			$allFce = $this->migrateFceHelper->getAllDbFce();
 		}
+
 		$allGe = $this->migrateFceHelper->getAllGe();
 
 		if (isset($formdata['fce'])) {
@@ -245,7 +247,8 @@ class SfTv2fluidgeController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCon
 		}
 
 		if (!empty($geKey)) {
-			$geContentCols = $this->sharedHelper->getGeContentCols($geKey);
+			$geContentCols = $this->migrateFceHelper->getGeContentCols($geKey);
+//			$geContentCols = $this->sharedHelper->getGeContentCols($geKey);
 		} else {
 			$geContentCols = NULL;
 		}
@@ -363,12 +366,12 @@ class SfTv2fluidgeController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCon
 		$this->sharedHelper->setUnlimitedTimeout();
 
 		$uidTvTemplate = (int)$formdata['tvtemplate'];
-		$uidBeLayout = (int)$formdata['belayout'];
+		$uidBeLayout = $formdata['belayout'];
 
 		$contentElementsUpdated = 0;
 		$pageTemplatesUpdated = 0;
 
-		if ($uidTvTemplate > 0 && $uidBeLayout > 0) {
+		if ($uidTvTemplate > 0 && strlen($uidBeLayout)) {
 			$pageUids = $this->sharedHelper->getPageIds();
 
 			foreach($pageUids as $pageUid) {

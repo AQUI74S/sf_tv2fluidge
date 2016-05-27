@@ -25,6 +25,8 @@
 
 namespace Sf\SfTv2fluidge\Service;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Helper class for handling TV content column migration to Fluid backend layouts
  */
@@ -103,6 +105,23 @@ class MigrateContentHelper implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @return array
 	 */
 	public function getAllBeLayouts() {
+
+		$backendLayoutCollections = $this->sharedHelper->getBackendLayoutCollections();
+
+		if (is_array($backendLayoutCollections)) {
+			foreach ($backendLayoutCollections as $provider => $layoutCollection) {
+				$layouts = $layoutCollection->getAll();
+				if (count($layouts)) {
+					/** @var \TYPO3\CMS\Backend\View\BackendLayout\BackendLayout $layout */
+					foreach($layouts as $layout) {
+						$gridElements[$layoutCollection->getIdentifier() . '__' .  $layout->getIdentifier()] = $layout->getTitle();
+					}
+				}
+			}
+		}
+
+		return $gridElements;
+
 		$fields = 'uid, title';
 		$table = 'backend_layout';
 		$where = 'deleted=0';

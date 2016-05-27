@@ -25,6 +25,9 @@
 
 namespace Sf\SfTv2fluidge\Service;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use GridElementsTeam\Gridelements\Backend\LayoutSetup;
+
 /**
  * Helper class for handling TV FCE to Grid Element content migration
  */
@@ -39,6 +42,16 @@ class MigrateFceHelper implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @var \TYPO3\CMS\Core\Database\ReferenceIndex
 	 */
 	protected $refIndex;
+
+	/**
+	 * @var \GridElementsTeam\Gridelements\Backend\LayoutSetup
+	 */
+	protected $layoutSetup;
+
+	/**
+	 * @var array
+	 */
+	protected $gridElementLayoutSetup = NULL;
 
 	/**
 	 * DI for shared helper
@@ -118,24 +131,85 @@ class MigrateFceHelper implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @return array
 	 */
 	public function getAllGe() {
-		/* Select all, because field "alias" is not available in older versions of GE */
-		$fields = '*';
-		$table = 'tx_gridelements_backend_layout';
-		$where = 'deleted=0';
-
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($fields, $table, $where, '', '', '');
 
 		$gridElements = array();
-		foreach($res as $ge) {
-			$geKey = $ge['uid'];
-			if (!empty($ge['alias'])) {
-				$geKey = $ge['alias'];
-			}
+		$layoutSetup = $this->getGridElementLayoutSetup();
 
-			$gridElements[$geKey] = $ge['title'];
+		foreach ($layoutSetup as $layoutId => $setup) {
+			$gridElements[$layoutId] = $setup['title'];
 		}
 
 		return $gridElements;
+	}
+
+	protected function getGridElementLayoutSetup() {
+		if (!is_array($this->gridElementLayoutSetup)) {
+			$layoutSetupObj = $this->getLayoutSetup();
+			$layoutSetup = $layoutSetupObj->getLayoutSetup();
+
+			if (is_array($layoutSetup) && count($layoutSetup)) {
+				foreach ($layoutSetup as $layoutId => $setup) {
+					if (isset($setup['title']) && (strpos($setup['title'], 'LLL:') !== FALSE)) {
+						$layoutSetup[$layoutId]['title'] = $layoutSetupObj->getLanguageService()->sL($setup['title']);
+					}
+				}
+
+				$this->gridElementLayoutSetup = $layoutSetup;
+			} else {
+				$this->gridElementLayoutSetup = array();
+			}
+		}
+
+		return $this->gridElementLayoutSetup;
+	}
+
+	protected function getLayoutSetup() {
+		if (!$this->layoutSetup) {
+			/** @var \GridElementsTeam\Gridelements\Backend\LayoutSetup layoutSetup */
+			$this->layoutSetup = GeneralUtility::makeInstance('GridElementsTeam\Gridelements\Backend\LayoutSetup');
+			$this->layoutSetup->init('NEW', array());
+		}
+
+		return $this->layoutSetup;
+	}
+
+	public function getGeContentCols($layoutId) {
+		$contentColumns = array();
+
+//		$layoutSetup = $this->getGridElementLayoutSetup();
+		$layoutSetup = $this->getLayoutSetup();
+		$columns = $layoutSetup->getLayoutColumnsSelectItems($layoutId);
+		
+		foreach ($columns as $column) {
+			if (isset($column[0]) && isset($column[1])) {
+				$contentColumns[$column[1]] = $column[0];
+			}
+		}
+
+		return $contentColumns;
+	}
+
+	/**
+	 * Returns an array with names of content columns for the given TypoScript
+	 *
+	 * @param string $typoScript
+	 * @return array
+	 */
+	private function getContentColsFromTs($typoScript) {
+		$parser = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\TypoScript\\Parser\\TypoScriptParser');
+		$parser->parse($typoScript);
+		$data = $parser->setup['backend_layout.'];
+
+		$contentCols = array();
+		$contentCols[''] = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('label_select', 'sf_tv2fluidge');
+		if ($data) {
+			foreach($data['rows.'] as $row) {
+				foreach($row['columns.'] as $column) {
+					$contentCols[$column['colPos']] = $column['name'];
+				}
+			}
+		}
+		return $contentCols;
 	}
 
 	/**

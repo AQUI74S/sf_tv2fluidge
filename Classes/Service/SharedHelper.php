@@ -24,6 +24,8 @@
  ***************************************************************/
 
 namespace Sf\SfTv2fluidge\Service;
+
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use \Extension\Templavoila\Service\ApiService;
 
 /**
@@ -47,6 +49,11 @@ class SharedHelper implements \TYPO3\CMS\Core\SingletonInterface {
 	protected $extConf = array();
 
 	/**
+	 * @var \TYPO3\CMS\Backend\View\BackendLayout\BackendLayoutCollection
+	 */
+	protected $backendLayoutCollection = NULL;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -54,6 +61,24 @@ class SharedHelper implements \TYPO3\CMS\Core\SingletonInterface {
 		if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sf_tv2fluidge'])) {
 			$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sf_tv2fluidge']);
 		}
+	}
+
+	/**
+	 * @return \TYPO3\CMS\Backend\View\BackendLayout\BackendLayoutCollection
+	 */
+	public function getBackendLayoutCollections() {
+		if (!$this->backendLayoutCollection) {
+			/** @var \TYPO3\CMS\Backend\View\BackendLayoutView $backendLayoutView */
+			$backendLayoutView = GeneralUtility::makeInstance('TYPO3\CMS\Backend\View\BackendLayoutView');
+			$dataProviderCollection = $backendLayoutView->getDataProviderCollection();
+
+			/** @var \TYPO3\CMS\Backend\View\BackendLayout\DataProviderContext $dataProviderContext */
+			$dataProviderContext = GeneralUtility::makeInstance('TYPO3\CMS\Backend\View\BackendLayout\DataProviderContext');
+			$dataProviderContext->setPageTsConfig(array());
+			$this->backendLayoutCollection = $dataProviderCollection->getBackendLayoutCollections($dataProviderContext);
+		}
+
+		return $this->backendLayoutCollection;
 	}
 
 	/**
@@ -282,10 +307,27 @@ class SharedHelper implements \TYPO3\CMS\Core\SingletonInterface {
 	/**
 	 * Returns an array with names of content columns for the given backend layout
 	 *
-	 * @param int $uidBeLayout
+	 * @param  string $layoutId
 	 * @return array
 	 */
-	public function getBeLayoutContentCols($uidBeLayout) {
+	public function getBeLayoutContentCols($layoutId) {
+
+		list($provider, $layoutId) = explode('__', $layoutId, 2);
+		$backendLayoutCollections = $this->getBackendLayoutCollections();
+
+		if ($provider && isset($backendLayoutCollections[$provider])) {
+			/** @var \TYPO3\CMS\Backend\View\BackendLayout\BackendLayoutCollection $layoutCollection */
+			$layoutCollection = $backendLayoutCollections[$provider];
+			$layout = $layoutCollection->get($layoutId);
+
+			if ($layout) {
+				$pageTsConfig = $layout->getConfiguration();
+				$content = $this->getContentColsFromTs($pageTsConfig);
+			}
+		}
+
+		return $content;
+
 		$beLayoutRecord = $this->getBeLayout($uidBeLayout);
 		return $this->getContentColsFromTs($beLayoutRecord['config']);
 	}
