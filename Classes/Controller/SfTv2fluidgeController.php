@@ -213,17 +213,26 @@ class SfTv2fluidgeController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCon
 
 		if ($this->sharedHelper->getTemplavoilaStaticDsIsEnabled()) {
 			$allFce = $this->migrateFceHelper->getAllFileFce();
+		} else {
+			if (isset($formdata['fce_storageFolder'])) {
+				$allFce = $this->migrateFceHelper->getAllDbFce( $formdata['fce_storageFolder'] );
+			} else {
+				$allFce = $this->migrateFceHelper->getAllDbFce();
+			}
 		}
-		else {
-			$allFce = $this->migrateFceHelper->getAllDbFce();
+		if( isset( $formdata['ge_pageTs']) && is_numeric( $formdata['ge_pageTs'] ) ){
+			$pageId = $formdata['ge_pageTs'];
+		} else {
+			$pageId = null;
 		}
 
-		$allGe = $this->migrateFceHelper->getAllGe();
+		$allGe = $this->migrateFceHelper->getAllGe( $pageId );
 
-		if (isset($formdata['fce'])) {
+		if ( isset($formdata['fce']) && count( $allFce ) > 0 ) {
 			$uidFce = intval($formdata['fce']);
 		} else {
-			$uidFce = current(array_keys($allFce));
+			#$uidFce = current(array_keys($allFce));
+			$uidFce = 0;
 		}
 
 		if (isset($formdata['ge'])) {
@@ -247,7 +256,7 @@ class SfTv2fluidgeController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCon
 		}
 
 		if (!empty($geKey)) {
-			$geContentCols = $this->migrateFceHelper->getGeContentCols($geKey);
+			$geContentCols = $this->migrateFceHelper->getGeContentCols($geKey, $pageId );
 //			$geContentCols = $this->sharedHelper->getGeContentCols($geKey);
 		} else {
 			$geContentCols = NULL;
