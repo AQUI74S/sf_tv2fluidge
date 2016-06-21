@@ -57,7 +57,7 @@ class SharedHelper implements \TYPO3\CMS\Core\SingletonInterface {
 	 * Constructor
 	 */
 	public function __construct() {
-//		$this->templavoilaAPIObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance ('Extension\\Templavoila\\Service\\ApiService');
+		$this->templavoilaAPIObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance ('Extension\\Templavoila\\Service\\ApiService');
 		if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sf_tv2fluidge'])) {
 			$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sf_tv2fluidge']);
 		}
