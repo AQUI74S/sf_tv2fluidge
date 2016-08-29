@@ -16,8 +16,20 @@
         <table class="migration">
             <tr>
                 <td>
+                    <label for="fce_storageFolder"><f:translate key="label_fce_sf"/></label><br/>
+                    <f:form.textfield property="fce_storageFolder" name="fce_storageFolder" value="{formdata.fce_storageFolder}" additionalAttributes="{onChange : 'document.formdata.submit();'}"/>
+                </td>
+                <td></td>
+                <td>
+                    <label for="ge_pageTs"><f:translate key="label_ge_pageTs"/></label><br/>
+                    <f:form.textfield property="ge_pageTs" name="ge_pageTs" value="{formdata.ge_pageTs}" additionalAttributes="{onChange : 'document.formdata.submit();'}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <label for="fce"><f:translate key="label_fce"/></label><br/>
                     <f:form.select property="fce" name="fce" options="{allFce}" value="{formdata.fce}" optionValueField="uid" optionLabelField="title" additionalAttributes="{onChange : 'document.formdata.submit();'}"/>
+                    <f:form.hidden property="lastFce" name="lastFce" value="{formdata.lastFce}" />
                 </td>
                 <td></td>
                 <td>

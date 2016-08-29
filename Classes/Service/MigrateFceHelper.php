@@ -109,11 +109,15 @@ class MigrateFceHelper implements \TYPO3\CMS\Core\SingletonInterface {
 	 *
 	 * @return array
 	 */
-	public function getAllDbFce() {
+	public function getAllDbFce( $pid = null ) {
 		$fields = 'tx_templavoila_tmplobj.uid, tx_templavoila_tmplobj.title';
 		$table = 'tx_templavoila_datastructure, tx_templavoila_tmplobj';
 		$where = 'tx_templavoila_datastructure.scope=2 AND tx_templavoila_datastructure.uid = tx_templavoila_tmplobj.datastructure
 			AND tx_templavoila_datastructure.deleted=0 AND tx_templavoila_tmplobj.deleted=0';
+
+		if( $pid !== null && is_numeric( $pid )){
+			$where .= " AND tx_templavoila_datastructure.pid=" . $pid;
+		}
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($fields, $table, $where, '', '', '');
 
@@ -125,26 +129,46 @@ class MigrateFceHelper implements \TYPO3\CMS\Core\SingletonInterface {
 		return $fces;
 	}
 
+	public function getAllGe( $pageId = null ) {
+		// todo replaced array_merge() because it looses the numeric keys. Used a basic + operator instead
+		return  $this->getAllGeFromTs( $pageId ) + $this->getAllGeFromDb( $pageId );
+	}
+
 	/**
 	 * Returns an array of all Grid Elements
 	 *
 	 * @return array
 	 */
-	public function getAllGe() {
+	public function getAllGeFromDb( $pageId ) {
 
 		$gridElements = array();
-		$layoutSetup = $this->getGridElementLayoutSetup();
+		$layoutSetup = $this->getGridElementLayoutSetup( $pageId );
 
 		foreach ($layoutSetup as $layoutId => $setup) {
 			$gridElements[$layoutId] = $setup['title'];
 		}
-
 		return $gridElements;
 	}
 
-	protected function getGridElementLayoutSetup() {
+	public function getAllGeFromTs( $pageId ) {
+		$gridLayoutConfig = array();
+
+		$pageTSconfig = \TYPO3\CMS\Backend\Utility\BackendUtility::getPagesTSconfig($pageId);
+
+		if (isset($pageTSconfig['tx_gridelements.']['setup.'])) {
+			foreach ($pageTSconfig['tx_gridelements.']['setup.'] as $layoutId => $item) {
+				// remove tailing dot of layout ID
+				$layoutId = rtrim($layoutId, '.');
+
+				$gridLayoutConfig[$layoutId] = $item['title'];
+			}
+		}
+		return $gridLayoutConfig;
+	}
+
+	protected function getGridElementLayoutSetup( $pageId ) {
 		if (!is_array($this->gridElementLayoutSetup)) {
-			$layoutSetupObj = $this->getLayoutSetup();
+			$layoutSetupObj = $this->getLayoutSetup( $pageId );
 			$layoutSetup = $layoutSetupObj->getLayoutSetup();
 
 			if (is_array($layoutSetup) && count($layoutSetup)) {
@@ -163,21 +187,21 @@ class MigrateFceHelper implements \TYPO3\CMS\Core\SingletonInterface {
 		return $this->gridElementLayoutSetup;
 	}
 
-	protected function getLayoutSetup() {
+	protected function getLayoutSetup( $pageId = "NEW" ) {
 		if (!$this->layoutSetup) {
 			/** @var \GridElementsTeam\Gridelements\Backend\LayoutSetup layoutSetup */
 			$this->layoutSetup = GeneralUtility::makeInstance('GridElementsTeam\Gridelements\Backend\LayoutSetup');
-			$this->layoutSetup->init('NEW', array());
+			$this->layoutSetup->init( $pageId, array());
 		}
 
 		return $this->layoutSetup;
 	}
 
-	public function getGeContentCols($layoutId) {
+	public function getGeContentCols($layoutId, $pageId = null ) {
 		$contentColumns = array();
 
-//		$layoutSetup = $this->getGridElementLayoutSetup();
-		$layoutSetup = $this->getLayoutSetup();
+	#	$layoutSetup = $this->getGridElementLayoutSetup();
+		$layoutSetup = $this->getLayoutSetup( $pageId );
 		$columns = $layoutSetup->getLayoutColumnsSelectItems($layoutId);
 		
 		foreach ($columns as $column) {

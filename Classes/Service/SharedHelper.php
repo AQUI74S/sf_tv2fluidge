@@ -338,8 +338,24 @@ class SharedHelper implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @param string|int $geKey
 	 * @return array
 	 */
-	public function getGeContentCols($geKey) {
-		$geRecord = $this->getGridElement($geKey);
+	public function getGeContentCols($geKey, $pageId ) {
+		#$geRecord = $this->getGridElement($geKey);
+		$geRecord = $this->getGridElementFromDb($geKey);
+        if (!$geRecord) {
+            // todo remove redundant code to getContentColsFromTs()
+            $geRecord = $this->getGridElementFromTs($geKey, $pageId );
+            $data = $geRecord['config'];
+            $contentCols = array();
+            $contentCols[''] = Tx_Extbase_Utility_Localization::translate('label_select', 'sf_tv2fluidge');
+            if ($data) {
+                foreach($data['rows.'] as $row) {
+                    foreach($row['columns.'] as $column) {
+                        $contentCols[$column['colPos']] = $column['name'];
+                    }
+                }
+            }
+            return $contentCols;
+        }
 		return $this->getContentColsFromTs($geRecord['config']);
 	}
 
@@ -865,7 +881,7 @@ class SharedHelper implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @param string|int $key
 	 * @return array mixed
 	 */
-	private function getGridElement($key) {
+	private function getGridElementFromDb($key) {
 		$fields = '*';
 		$table = 'tx_gridelements_backend_layout';
 		$where = '';
@@ -879,6 +895,18 @@ class SharedHelper implements \TYPO3\CMS\Core\SingletonInterface {
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow($fields, $table, $where, '', '', '');
 		return $res;
+	}
+
+	private function getGridElementFromTs( $key, $pageId = 0 ) {
+		$pageTSconfig = \TYPO3\CMS\Backend\Utility\BackendUtility::getPagesTSconfig( $pageId );
+
+		if (isset($pageTSconfig['tx_gridelements.']['setup.'][$key . '.'])) {
+			$result = array();
+			$result['config'] = $pageTSconfig['tx_gridelements.']['setup.'][$key . '.']['config.'];
+			return $result;
+		}
+
+		return null;
 	}
 
 	/**

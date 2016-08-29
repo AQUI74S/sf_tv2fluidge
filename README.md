@@ -125,6 +125,9 @@ Example:
 To migrate a Flexible Content Element, just select it from the "Flexible Content Element" select box in the module.
 Next you must select a target Grid Element in the "Grid Element" select box.
 
+If you have created Grid Elements using Typoscript files instead of database object, you must specify the page id
+where those Typoscript are included in order to be available for conversion.
+
 If your Flexible Content Element contains content columns, then you can remap them to content columns in the target
 Grid Element.
 
